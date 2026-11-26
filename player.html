@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audio</title>
+<style>body{font-family:system-ui,sans-serif;margin:0;background:#eef2f7;display:flex;justify-content:center}
+.c{max-width:480px;width:100%;background:#fff;min-height:100vh;padding:20px;box-sizing:border-box;text-align:center}
+img{max-width:100%;border-radius:12px;margin:12px 0}h1{margin:8px 0 2px;font-size:1.5rem}h2{margin:0 0 12px;font-size:1.05rem;color:#555;font-weight:400}
+.bar{height:14px;background:#d9e0ea;border-radius:7px;cursor:pointer;overflow:hidden}.f{height:100%;width:0;background:#2563eb}
+.t{display:flex;justify-content:space-between;font-size:.9rem;color:#444;margin:6px 0 14px}
+button{font-size:1.1rem;padding:14px 28px;border:0;border-radius:30px;background:#2563eb;color:#fff;margin:4px}</style></head><body><div class="c">
+<h1 id="ti"></h1><h2 id="su"></h2><img id="im" alt="Immagine esplicativa" hidden>
+<div class="bar" id="b"><div class="f" id="f"></div></div><div class="t"><span id="cu">0:00</span><span id="du">0:00</span></div>
+<button id="bk">⟲ 10s</button><button id="pl">▶ Ascolta</button><button id="fw">10s ⟳</button><audio id="a" preload="metadata"></audio></div>
+<script>const p=new URLSearchParams(location.search),$=i=>document.getElementById(i),a=$('a');
+$('ti').textContent=p.get('t')||'';$('su').textContent=p.get('s')||'';document.title=p.get('t')||'Audio';
+if(p.get('i')){$('im').src=p.get('i');$('im').hidden=false}a.src=p.get('a')||'';
+const m=x=>isFinite(x)?Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0'):'0:00';
+a.onloadedmetadata=()=>$('du').textContent=m(a.duration);
+a.ontimeupdate=()=>{$('cu').textContent=m(a.currentTime);$('f').style.width=(a.currentTime/a.duration*100||0)+'%'};
+a.onended=()=>$('pl').textContent='▶ Riascolta';
+$('pl').onclick=()=>{if(a.paused){a.play();$('pl').textContent='⏸ Pausa'}else{a.pause();$('pl').textContent='▶ Ascolta'}};
+$('bk').onclick=()=>a.currentTime-=10;$('fw').onclick=()=>a.currentTime+=10;
+$('b').onclick=e=>{const r=$('b').getBoundingClientRect();a.currentTime=(e.clientX-r.left)/r.width*a.duration};</script></body></html>
